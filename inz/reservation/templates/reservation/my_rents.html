@@ -1,0 +1,48 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+        {% if user.is_authenticated %}
+            {% if reservations %}
+                <form method="get" class="mb-4">
+                    <label for="roomSelect">Wybierz salę, aby sprawdzić swoje wynajmy</label>
+                    <select id="roomSelect" name="room" class="form-select" onchange="this.form.submit()">
+                        <option selected>Wybierz Salę</option>
+                        {% for room_name in room_names %}
+                            <option value="{{ room_name }}" {% if room_name == request.GET.room %}selected{% endif %}>{{ room_name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+
+                {% for reservation in reservations %}
+                    <div class="card reservation-card mb-4 shadow rounded">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ reservation.room.name }}</h5>
+                            <p class="card-text"><strong>Data:</strong> {{ reservation.start_date }} - {{ reservation.end_date }}</p>
+                            <p class="card-text"><strong>Firma:</strong> {{ reservation.company }}</p>
+                            <p class="card-text"><strong>Koszt Wynajmu:</strong> {{ reservation.cost }} zł</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if reservations.paginator.num_pages > 1 %}
+                    <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination">
+                            {% if reservations.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page=1">&laquo; Pierwsza</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ reservations.previous_page_number }}">Poprzednia</a></li>
+                            {% endif %}
+                            <li class="page-item disabled"><a class="page-link" href="#">Strona {{ reservations.number }} z {{ reservations.paginator.num_pages }}</a></li>
+                            {% if reservations.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ reservations.next_page_number }}">Następna</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ reservations.paginator.num_pages }}">Ostatnia &raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <h2 class="mt-4">Brak wynajmów</h2>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

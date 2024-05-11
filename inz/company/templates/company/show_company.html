@@ -1,0 +1,34 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <a href="{% url 'list-companies' %}" class="btn btn-danger">Powrót</a>
+                <hr/>
+            </div>
+
+            <h2>Informacje o firmie</h2>
+            <div class="card mt-3 shadow">
+                <div class="card-header">
+                    <a href="{% url 'list-company-users' company.id%}" class="btn btn-secondary">Lista Pracowników</a>
+                    <a href="{% url 'list-discount' company.id%}" class="btn btn-secondary">Rabaty</a>
+                    <a href="{% url 'company-summary' company.id%}" class="btn btn-secondary">Aktywa</a>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ company.companyName }}</h4>
+                    <p class="card-text"><strong>Obszar działalności:</strong> {{ company.get_businessArea_display }}</p>
+                    <p class="card-text"><strong>Kod pocztowy:</strong> {{ company.zipCode }}</p>
+                    <p class="card-text"><strong>Lokalizacja:</strong> {{ company.location }}</p>
+                    <p class="card-text"><strong>NIP:</strong> {{ company.nip }}</p>
+                    {% if company.manager %}
+                        <p class="card-text"><strong>Opiekun:</strong> {{ company.manager }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <h1 class="mb-4">Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+            <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <h1 class="mb-4">Urządzenia drukujące</h1>
+            </div>
+
+            {% if printers %}
+                {% for printer in printers %}
+                    <div class="card mb-4 shadow rounded">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p><strong>Model:</strong> {{ printer.model }}</p>
+                                <p><strong>Numer seryjny:</strong> {{ printer.serial_number }}</p>
+                                <p><strong>Status:</strong> {{ printer.get_status_display }}</p>
+                            </div>
+
+                            {% if destination == 'update' %}
+                                <p><strong>Data ostatniego serwisu:</strong> {{ printer.date_of_last_service }}</p>
+                                <p><strong>Data następnego serwisu:</strong> {{ printer.date_of_next_service }}</p>
+                                <div class="text-right">
+                                    <a href="{% url 'update-printer' printer_id=printer.id %}" class="btn btn-success">Aktualizuj</a>
+                                    <a href="{% url 'delete-printer' printer_id=printer.id %}" class="btn btn-danger">Usuń</a>
+                                </div>
+                            {% elif destination == 'rent' %}
+                                <p><strong>Cena:</strong> {{ printer.price }} zł/100 wydrukowanych stron</p>
+                                <div class="text-right">
+                                    <a href="{% url 'add-printer-rent' printer_id=printer.id %}" class="btn btn-primary">Wynajmij</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info mt-4 shadow rounded" role="alert">
+                    Brak dostępnych drukarek.
+                </div>
+            {% endif %}
+
+            {% if printers.paginator.num_pages > 1 %}
+                <nav aria-label="Stronicowanie" class="mt-4">
+                    <ul class="pagination">
+                        {% if printers.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page=1">&laquo; Pierwsza</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ printers.previous_page_number }}">Poprzednia</a></li>
+                        {% endif %}
+                        <li class="page-item disabled"><a class="page-link" href="#">Strona {{ printers.number }} z {{ printers.paginator.num_pages }}</a></li>
+                        {% if printers.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ printers.next_page_number }}">Następna</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ printers.paginator.num_pages }}">Ostatnia &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-danger mt-4 shadow rounded" role="alert">
+                <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+                <a href="{% url 'login-user' %}" class="btn btn-primary mt-2">Zaloguj się tutaj!</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

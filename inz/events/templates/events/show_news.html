@@ -1,0 +1,31 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container mb-3 shadow p-4 bg-body rounded">
+        <a href="{% url 'list-news' %}"><button type="button" class="btn btn-danger mb-3">Powrót</button></a><hr/>
+
+        <h1>{{ news.newsName }}</h1>
+        <p><i>{{ news.author.first_name }} {{ news.author.last_name }}</i> | {{ news.publicationDate }}</p>
+
+        {% if news.newsImage %}
+            <img src="{{ news.newsImage.url }}" alt="News Image" class="news-article-image">
+        {% endif %}
+
+        <p>{{ news.description|safe }}</p>
+    </div>
+{% else %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Przepraszamy :(</h4>
+                    <p>Musisz się zalogować, aby móc kontynuować!</p>
+                    <hr>
+                    <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

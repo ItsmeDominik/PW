@@ -1,0 +1,29 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <a href="{% url 'list-offices' %}" class="btn btn-danger mb-3">Powrót</a>
+                    <hr/>
+                    {% if existing_reservations %}
+                        <h3 class="mb-3">Terminy niedostępne:</h3>
+                        <ul class="mb-4">
+                            {% for reservation in existing_reservations %}
+                                <li>Od {{ reservation.start_date }} do {{ reservation.end_date }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div class="shadow p-4 mb-5 bg-body rounded">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <input type="submit" value="Wynajmij" class="btn btn-secondary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

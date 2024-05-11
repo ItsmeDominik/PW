@@ -1,0 +1,83 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if user.is_superuser %}
+                    <a href="{% url 'list-support-tickets' %}"><button type="button" class="btn btn-danger btn-back">Powrót</button></a>
+                {% else %}
+                    <a href="{% url 'list-tickets' %}"><button type="button" class="btn btn-danger btn-back">Powrót</button></a>
+                {% endif %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ticket.title }}</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Status:</strong> {{ ticket.get_status_display }}</li>
+                                    <li class="list-group-item"><strong>Kategoria:</strong> {{ ticket.get_category_display }}</li>
+                                    <li class="list-group-item"><strong>Piętro:</strong> {{ ticket.room.location }}</li>
+                                    {% if ticket.office %}
+                                        <li class="list-group-item"><strong>Biuro:</strong> {{ ticket.office.name }}</li>
+                                    {% endif %}
+                                    <li class="list-group-item"><strong>Opis:</strong></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Priorytet:</strong> <span class="{% if ticket.priority == 'low' %}priority-low{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-high{% endif %}">{{ ticket.get_priority_display }}</span></li>
+                                    <li class="list-group-item"><strong>Data utworzenia:</strong> {{ ticket.creation_time|date:"Y-m-d H:i" }}</li>
+                                    {% if ticket.end_time %}
+                                        <li class="list-group-item"><strong>Data zamknięcia:</strong> {{ ticket.end_time|date:"Y-m-d H:i" }}</li>
+                                    {% endif %}
+                                    {% if ticket.user %}
+                                        <li class="list-group-item"><strong>Użytkownik:</strong> {{ ticket.user.first_name }} {{ ticket.user.last_name }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ ticket.description|safe }}</p>
+                    </div>
+                </div>
+
+                <h2>Komentarze</h2>
+                {% for comment in ticket.related_comments.all %}
+                    <div class="card mt-3 {% if comment.user == user %}comment-user{% elif forloop.counter|divisibleby:2 %}bg-light{% endif %}">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ comment.created_at }} - {{ comment.user.first_name }} {{ comment.user.last_name }}:</h6>
+                            <p class="card-text comment-text">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if ticket.status != 'resolved' and not user.is_superuser %}
+                    <h6 class="mt-3">Dodaj komentarz</h6>
+                    <form method="post" action="{% url 'add-comment' ticket.id %}" class="mb-3">
+                        {% csrf_token %}
+                        <textarea class="form-control" name="content" rows="4" cols="50"></textarea>
+                        <input type="submit" value="Dodaj komentarz" class="btn btn-primary mt-2">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+                <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj tutaj!</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+version: '2'  # Określenie wersji składni pliku docker-compose
+services:  # Zdefiniowanie usług, które zostaną uruchomione w kontenerach
+    web:  # Nazwa pierwszej usługi, która reprezentuje aplikację webową
+        environment:  # Zmienne środowiskowe dla usługi
+            - DB_HOST=db  # Określenie hosta bazy danych jako 'db'
+        build: .  # Lokalizacja Dockerfile dla budowania obrazu usługi
+        ports:  # Mapowanie portów między kontenerem a hostem
+            - "8000:8000"  # Mapowanie portu 8000 kontenera na port 8000 hosta
+        volumes:  # Montowanie woluminów
+            - .:/app  # Mapowanie bieżącego katalogu na katalog /app w kontenerze
+        links:  # Linki do innych usług
+            - db  # Link do usługi bazy danych
+
+    db:  # Nazwa drugiej usługi, która reprezentuje bazę danych
+        image: "postgres:15.2-alpine"  # Obraz Dockerowy używany dla tej usługi
+        ports:  # Mapowanie portów między kontenerem a hostem
+            - "5432:5432"  # Mapowanie portu 5432 kontenera na port 5432 hosta
+        environment:  # Zmienne środowiskowe dla usługi
+            POSTGRES_PASSWORD: hunter3  # Ustalenie hasła dla użytkownika PostgreSQL

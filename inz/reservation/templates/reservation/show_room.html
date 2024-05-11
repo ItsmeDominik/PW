@@ -1,0 +1,31 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+<div class="shadow p-4 mb-5 bg-body rounded">  <!-- Stosujemy efekt "wysuniętej karty papieru" -->
+    {% if user.is_authenticated %}
+        {% if room.destination == "office" %}
+            <a href="{% url 'list-offices' %}" class="btn btn-danger mb-3">Powrót</a><hr/>
+            <h1>{{ room.name }}</h1>
+            <p>Miejsca {{ room.capacity }} </p>
+            <p>Lokalizacja Piętro {{ room.location }}</p>
+            <p>Koszt za jeden dzień wynajmu {{ room.price }} zł</p>
+        {% elif room.destination == "conference_room" %}
+            <a href="{% url 'list-rooms-reservation' %}" class="btn btn-danger mb-3">Powrót</a><hr/>
+            <h1>{{ room.name }}</h1>
+            <p>Miejsca {{ room.capacity }} </p>
+            <p>Lokalizacja Piętro {{ room.location }}</p>
+            <p>Koszt za godzinę {{ room.price }} zł</p>
+        {% endif %}
+
+        {% if room.roomImage %}
+            <img src="{{ room.roomImage.url }}" alt="Room Image" style="width: 100%; max-height: 500px; height: auto; margin-bottom: 20px;" class="rounded">  <!-- Dodajemy zaokrąglenie do obrazka -->
+        {% endif %}
+
+        <p>{{ room.description|safe }}</p>
+
+    {% else %}
+        <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+        <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj tutaj!</a>  <!-- Dodajemy klasę "btn" do linku, aby wyglądał jak przycisk -->
+    {% endif %}
+</div>  <!-- Zamykamy div z efektem "wysuniętej karty papieru" -->
+{% endblock %}

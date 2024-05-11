@@ -1,0 +1,185 @@
+
+{% load my_tags %}
+
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary fixed-width-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Menu</a>
+        {% endif %}
+        <a class="navbar-brand" href="{% url 'list-news' %}">WoJaK</a>
+        <div class="ml-auto d-flex align-items-center">
+            {% if user.is_authenticated %}
+
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span class="navbar-text mr-2 user-name-highlight">
+                <a class="btn btn-outline-success mr-2" href="{% url 'logout-user' %}">Wyloguj</a>
+                <a class="btn btn-outline-success mr-2" href="#">{{ user.first_name }} {{ user.last_name }} </a>
+                </span>
+            {% else %}
+                <span class="navbar-text mr-2 user-name-highlight">
+                <a class="btn btn-outline-success mr-2 " href="{% url 'login-user' %}">Zaloguj</a>
+                </span>
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        {% if user.is_authenticated %}
+            {% if request.user|has_group:"client" %}
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                        Artykuły
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'list-news' %}">Wyświetl Artykuły</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown">
+                        Rabaty
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                        <li><a class="dropdown-item" href="{% url 'list-discount-default' %}">Moje Rabaty</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown">
+                        Oferty
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                        <li><a class="dropdown-item" href="{% url 'list-rooms-reservation' %}">Sale Konferencyjne</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-offices' %}">Przestrzeń Biurowa</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-printers' %}">Drukarki</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown">
+                        Moje Produkty
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
+                        <li><a class="dropdown-item" href="{% url 'my-reservations' %}">Sale Konferencyjne</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my-rents' %}">Przestrzeń biurowa</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my-printers' %}">Drukarki</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown">
+                        Zgłoszenia
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
+                        <li><a class="dropdown-item" href="{% url 'add-support-ticket' %}">Dodaj Zgłoszenie</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-tickets' %}">Moje Zgłoszenia</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+            {% if request.user|has_group:"administration" %}
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown">
+                        Zarządzanie Aktywami
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                        <b>Przestrzeń Biurowa</b>
+                        <li><a class="dropdown-item" href="{% url 'list-offices' %}">Wynajmij Przestrzeń</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my-rents' %}">Lista Wynajmu</a></li>
+                        <b>Sale Konferencyjne</b>
+                        <li><a class="dropdown-item" href="{% url 'list-rooms-reservation' %}">Rezerwuj Salę</a></li>
+                        <li><a class="dropdown-item" href="{% url 'my-reservations' %}">Lista Rezerwacje</a></li>
+                        <b>Sprzęt Biurowy</b>
+                        <li><a class="dropdown-item" href="{% url 'list-rent-printer' %}">Wynajmij Drukarkę</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-rented-printer' %}">Lista Wynajętych Drukarek</a></li>
+                        <li><a class="dropdown-item" href="{% url 'expired-rented-printers' %}">Aktualizuj Status</a></li>
+                        <b>Produkty</b>
+                        <li><a class="dropdown-item" href="{% url 'list-products' %}">Produkty</a></li>
+                        <li><a class="dropdown-item" href="{% url 'add-order' %}">Złóż Zamówienia</a></li>
+                        <li><a class="dropdown-item" href="{% url 'user-orders' %}">Moje Zamówienia</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown">
+                        Artykuły
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
+                        <li><a class="dropdown-item" href="{% url 'add-news' %}">Dodaj Artykuł</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-update-news' %}">Edytuj Artykuł</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-news' %}">Wyświetl Artykuły</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown">
+                        Zgłoszenia
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
+                        <li><a class="dropdown-item" href="{% url 'add-support-ticket' %}">Dodaj Zgłoszenie</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-tickets' %}">Moje Zgłoszenia</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown">
+                        CRM
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                        <li><a class="dropdown-item" href="{% url 'list-companies' %}">Klienci</a></li>
+                        <li><a class="dropdown-item" href="{% url 'add-discount' %}">Dodaj Rabat</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+            {% if request.user|has_group:"admin" %}
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown">
+                        Zgłoszenia
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                        <li><a class="dropdown-item" href="{% url 'list-support-tickets' %}">Lista Zgłoszeń</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton8" data-bs-toggle="dropdown">
+                        Społeczność
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
+                        <li><a class="dropdown-item" href="{% url 'list-companies' %}">Klienci</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton9" data-bs-toggle="dropdown">
+                        Zarządzanie
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton9">
+                        <b>Przestrzeń Biurowa</b>
+                        <li><a class="dropdown-item" href="{% url 'add-room' %}">Dodaj Pomieszczenie</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-update-room' %}">Aktualizuj Pomieszczenie</a></li>
+                        <b>Urządzenia Biurowe</b>
+                        <li><a class="dropdown-item" href="{% url 'add-printer' %}">Dodaj Drukarkę</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list-update-printer' %}">Aktualizuj Drukarkę</a></li>
+                        <b>Firmy</b>
+                        <li><a class="dropdown-item" href="{% url 'add-company' %}">Dodaj Firmę</a></li>
+                        <b>Produkty</b>
+                        <li><a class="dropdown-item" href="{% url 'add-product' %}">Dodaj Produkt</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update-order-status' %}">Aktualizuj Status Zamówienia</a></li>
+                        <b>Osoby</b>
+                        <li><a class="dropdown-item" href="{% url 'register-user' %}">Dodaj Użytkownika</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle fixed-width-btn" type="button" id="dropdownMenuButton10" data-bs-toggle="dropdown">
+                        Panel Administracyjny
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton10">
+                        <li><a class="dropdown-item" href="/admin">Admin Panel</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,54 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="mb-3">
+        <h1>Aktualizuj Artykuł</h1>
+    </div>
+
+    <div class="row">
+    {% for news in news_update %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow rounded h-100 d-flex flex-column">
+                <a href="{% url 'show-news' news_id=news.id %}">
+                    <div class="news-image-container rounded" style="background-image: url('{{ news.newsImage.url }}')">
+                        {% if news.newsImage %}
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <p class="news-name mb-auto"><strong>{{ news.newsName }}</strong></p>
+                    <p>Opublikowano {{ news.publicationDate }}</p>
+                    <div>
+                        <a href="{% url 'update-news' news_id=news.id %}"><button type="button" class="btn btn-success">Aktualizuj</button></a>
+                        <a href="{% url 'delete-news' news_id=news.id %}"><button type="button" class="btn btn-danger">Usuń</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+            </div><hr/><div class="row">
+        {% endif %}
+    {% endfor %}
+    </div>
+    <br/>
+    <nav aria-label="Stronicowanie">
+        <ul class="pagination">
+            {% if news_update.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">Pierwsza</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ news_update.previous_page_number }}">Poprzednia</a></li>
+            {% endif %}
+            <li class="page-item disabled"><a class="page-link" href="#">Strona {{ news_update.number }} z {{ news_update.paginator.num_pages }}.</a></li>
+            {% if news_update.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ news_update.next_page_number }}">Następna</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ news_update.paginator.num_pages }}">Ostatnia</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% else %}
+    <div class="alert alert-danger mt-4 shadow rounded" role="alert">
+        <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+        <a href="{% url 'login-user' %}" class="btn btn-primary mt-2">Zaloguj się tutaj!</a>
+    </div>
+{% endif %}
+{% endblock %}

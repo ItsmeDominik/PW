@@ -1,0 +1,70 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+    {% if destination == "office" %}
+        <h3>Pokoje biurowe</h3>
+    {% elif destination == "conference_room" %}
+        <h3>Sale konferencyjne</h3>
+    {% else %}
+        <h3>Zaktualizuj salę konferencyjną</h3>
+    {% endif %}
+
+   <hr/>
+    <div class="row">
+    {% for room in rooms %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow rounded">
+                <a href="{% url 'show-room' room_id=room.id %}">
+                    <div class="room-image-container" style="background-image: url('{{ room.roomImage.url }}')">
+                        {% if room.roomImage %}
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-body">
+                    <p><b>{{ room.name }}</b></p>
+                    <p>Piętro: {{ room.location }}</p>
+                    <p>Miejsca: {{ room.capacity }}</p>
+                    {% if destination == "office" %}
+                        <p>Cena: {{ room.price }} zł/1 dzień</p>
+                    {% elif destination == "conference_room" %}
+                        <p>Cena: {{ room.price }} zł/h</p>
+                    {% endif %}
+                    {% if user.groups.all.0.name != "client" %}
+                        {% if destination == "office" %}
+                            <a href="{% url 'add-office-rent' room_id=room.id %}" class="btn btn-success">Wynajmij</a>
+                        {% elif destination == "conference_room" %}
+                            <a href="{% url 'add-reservation' room_id=room.id %}" class="btn btn-success">Rezerwuj</a>
+                        {% else %}
+                            <a href="{% url 'update-room' room_id=room.id %}" class="btn btn-success">Aktualizuj</a>
+                            <a href="{% url 'delete-room' room_id=room.id %}" class="btn btn-danger">Usuń</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:2 and not forloop.last %}
+            </div><hr/><div class="row">
+        {% endif %}
+    {% endfor %}
+    </div>
+    <br/>
+    <nav aria-label="Stronicowanie">
+        <ul class="pagination">
+            {% if rooms.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">Pierwsza</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ rooms.previous_page_number }}">Poprzednia</a></li>
+            {% endif %}
+            <li class="page-item disabled"><a class="page-link" href="#">Strona {{ rooms.number }} z {{ rooms.paginator.num_pages }}.</a></li>
+            {% if rooms.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ rooms.next_page_number }}">Następna</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ rooms.paginator.num_pages }}">Ostatnia</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% else %}
+    <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+    <a href="{% url 'login-user' %}">Zaloguj tutaj!</a>
+{% endif %}
+{% endblock %}

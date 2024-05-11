@@ -1,0 +1,16 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="shadow p-4 mb-5 bg-body rounded">
+                <h2 class="mb-4">Dodaj Pomieszczenie</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Dodaj" class="btn btn-secondary mt-3">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

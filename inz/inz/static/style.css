@@ -1,0 +1,130 @@
+.room-image-container,
+.news-image-container,
+.discount-image-container,
+.news-update-image-container,
+.article-image-container,
+.room-image {
+    background-size: cover;
+    height: 200px;
+    width: 100%;
+    position: relative;
+}
+
+.room-description {
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.room-action-buttons,
+.room-buttons {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+}
+
+.news-article-image {
+    width: 100%;
+    max-height: 400px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.no-style,
+.no-style:hover,
+.no-style:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.text-red {
+    color: red;
+}
+
+.reservation-card,
+.ticket-card,
+.card {
+    margin-bottom: 20px;
+}
+
+.pagination-center {
+    justify-content: center;
+}
+
+.priority-low {
+    color: green;
+}
+
+.priority-medium {
+    color: orange;
+}
+
+.priority-high {
+    color: red;
+}
+
+.main-container,
+.ticket-container {
+    padding: 20px 0;
+}
+
+.ticket-btn-group,
+.btn-back,
+.btn-back-user,
+.btn-back-superuser {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.btn-back-user {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-back-user:hover {
+    background-color: #0b58d3;
+    border-color: #0b58d3;
+}
+
+.btn-back-superuser {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-back-superuser:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.comment-user {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.comment-text {
+    font-size: 0.9rem;
+}
+
+.news-image-container {
+    border-radius: 15px;
+}
+.custom-btn {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    margin-right: 5px;
+}
+.fixed-width-btn {
+    width: 200px; /* Możesz dostosować tę wartość do swoich potrzeb */
+}
+.fixed-width-btn {
+        width: 200px;
+}
+.user-name-highlight {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FFD700;
+}

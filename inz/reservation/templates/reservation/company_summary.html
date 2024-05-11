@@ -1,0 +1,41 @@
+{% extends 'inz/base.html' %}
+{% block content %}
+    <div class="container mt-4">
+        {% if user.is_authenticated %}
+            <a href="{% url 'show-company' company.id %}" class="btn btn-danger mb-3">Wróć</a>
+            <hr/>
+
+            <h2 class="mb-4">Podsumowanie dla firmy {{ company.companyName }}</h2>
+
+            <!-- Style dla wynajętych urządzeń drukujących -->
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Liczba wynajętych urządzeń drukujących: {{ rented_printers_count }}</h5>
+                </div>
+            </div>
+
+            <!-- Style dla zarezerwowanych sal konferencyjnych -->
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Liczba zarezerwowanych sal konferencyjnych: {{ reserved_rooms_count }}</h5>
+                </div>
+            </div>
+
+            <!-- Style dla zarezerwowanych biur -->
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Liczba wynajętych pomieszczeń: {{ reserved_office_rooms_count }}</h5>
+                </div>
+            </div>
+
+        {% else %}
+            <!-- Style dla komunikatu o braku autoryzacji -->
+            <div class="alert alert-danger mt-3 shadow rounded" role="alert">
+                <h4 class="alert-heading">Uwaga!</h4>
+                <p>Musisz się zalogować, aby kontynuować.</p>
+                <hr>
+                <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

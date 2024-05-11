@@ -1,0 +1,56 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <h1>Drukarki</h1>
+            </div>
+
+            {% if printers %}
+                {% for printer in printers %}
+                    <div class="card mb-3 shadow rounded">
+                        <div class="card-body">
+                            <div class="mb-2">
+                               <p><strong>Model:</strong> {{ printer.model }}</p>
+                               <p><strong>Numer Seryjny:</strong> {{ printer.serial_number }}</p>
+                               <p><strong>Status:</strong> {{ printer.get_status_display }}</p>
+                               <p><strong>Cena:</strong> {{ printer.price }} zł/100 wydrukowanych stron</p>
+                                {% if printer.status == 'in_use' %}
+                                    {% for rent in printer.printerrent_set.all %}
+                                        <p><strong>Data zkończenia rezerwacji:</strong> {{ rent.end_date }} </p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info shadow rounded" role="alert">
+                    Brak dostępnych drukarek.
+                </div>
+            {% endif %}
+
+            <nav aria-label="Stronicowanie" class="mt-4">
+                <ul class="pagination">
+                    {% if printers.has_previous %}
+                        <li class="page-item"> <a class="page-link" href="?page=1">&laquo; Pierwsza</a></li>
+                        <li class="page-item"> <a class="page-link" href="?page={{ printers.previous_page_number }}">Poprzednia</a></li>
+                    {% endif %}
+                    {% if printers.paginator.num_pages > 1 %}
+                        <li class="page-item disabled"><a class="page-link" href="#">Strona {{ printers.number }} z {{ printers.paginator.num_pages }}</a></li>
+                    {% endif %}
+                    {% if printers.has_next %}
+                        <li class="page-item">  <a class="page-link" href="?page={{ printers.next_page_number }}">Następna</a></li>
+                        <li class="page-item"> <a class="page-link" href="?page={{ printers.paginator.num_pages }}">Ostatnia &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="alert alert-danger mt-4 shadow rounded" role="alert">
+                <h1>Przepraszamy :( Musisz się zalogować, aby móc kontynuować!</h1>
+                <a href="{% url 'login-user' %}" class="btn btn-primary mt-2">Zaloguj się tutaj!</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

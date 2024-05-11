@@ -1,0 +1,22 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+<div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+    <h1>Logowanie</h1>
+    <br/><br/>
+
+    <form action="" method=POST>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleInputEmail1">Nazwa Użytkownika:</label>
+            <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="Wprowadź nazwę użytkownika">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Hasło:</label>
+            <input type="password" class="form-control" name="password" placeholder="Hasło">
+        </div>
+        <br/>
+        <input type="submit" value="Zaloguj" class="btn btn-secondary">
+    </form>
+</div>
+{% endblock %}

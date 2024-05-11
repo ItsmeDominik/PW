@@ -1,0 +1,64 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="mb-4">Twoje zamówienia</h2>
+                    <div class="shadow p-4 mb-5 bg-body rounded">
+                        {% if orders %}
+                            {% for order in orders %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Zamówienie nr {{ order.id }}</h5>
+                                        <p>Data zamówienia: {{ order.date_ordered }}</p>
+                                        <p>Status zamówienia: {{ order.get_status_display }}</p>
+                                        {% if order.completion_date %}
+                                        <p>Data realizacji: {{ order.completion_date }}</p>
+                                        {% endif %}
+                                        <h6>Szczegóły:</h6>
+                                        <ul>
+                                            <li>{{ order.product.name }} - {{ order.quantity }} szt.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <!-- Stronicowanie: -->
+                            <nav aria-label="Stronicowanie">
+                                <ul class="pagination">
+                                    {% if orders.has_previous %}
+                                        <li class="page-item"> <a class="page-link" href="?page=1">&laquo; Pierwsza</a></li>
+                                        <li class="page-item"> <a class="page-link" href="?page={{ orders.previous_page_number }}">Poprzednia</a></li>
+                                    {% endif %}
+                                    {% if orders.paginator.num_pages > 1 %}
+                                        <li class="page-item disabled"><a class="page-link" href="#">Strona {{ orders.number }} z {{ orders.paginator.num_pages }}</a></li>
+                                    {% endif %}
+                                    {% if orders.has_next %}
+                                        <li class="page-item">  <a class="page-link" href="?page={{ orders.next_page_number }}">Następna</a></li>
+                                        <li class="page-item"> <a class="page-link" href="?page={{ orders.paginator.num_pages }}">Ostatnia &raquo;</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+
+                        {% else %}
+                            <div class="alert alert-info" role="alert">
+                                Nie masz żadnych zamówień.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="mb-4">Przepraszamy :( Musisz się zalogować, aby móc kontynuować!</h1>
+                    <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,5 @@
+Django==4.2
+pytz==2023.3
+psycopg2==2.9.6
+Pillow==10.0.0
+django-extensions==3.2.3

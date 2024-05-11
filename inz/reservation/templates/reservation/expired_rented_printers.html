@@ -1,0 +1,54 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="mb-4">Drukarki z przekroczonym terminem wynajmu</h1>
+                {% if expired_printers %}
+                    {% for printer in expired_printers %}
+                        <div class="card reservation-card mb-4 shadow rounded">
+                            <div class="card-body">
+                                <p>Model: {{ printer.printer.get_model_display }}</p>
+                                <p>Numer Seryjny: {{ printer.printer.serial_number }}</p>
+                                <p>Data zakończenia wynajmu: {{ printer.end_date }}</p>
+                                <!-- Inne pola, które chcesz wyświetlić -->
+                                <div class="text-right">
+                                    <a href="{% url 'update-printer-status-expired' printer_id=printer.printer.id %}"><button type="button" class="btn btn-success">Aktualizuj</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2 class="mt-4">Brak drukarek z przekroczonym terminem wynajmu</h2>
+                {% endif %}
+                <nav aria-label="Stronicowanie" class="mt-4">
+                    <ul class="pagination">
+                        {% if expired_printers.has_previous %}
+                            <li class="page-item"> <a class="page-link" href="?page=1">&laquo; Pierwsza</a></li>
+                            <li class="page-item"> <a class="page-link" href="?page={{ expired_printers.previous_page_number }}">Poprzednia</a></li>
+                        {% endif %}
+                        {% if expired_printers.paginator.num_pages > 1 %}
+                            <li class="page-item disabled"><a class="page-link" href="#">Strona {{ expired_printers.number }} z {{ expired_printers.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        {% if expired_printers.has_next %}
+                            <li class="page-item">  <a class="page-link" href="?page={{ expired_printers.next_page_number }}">Następna</a></li>
+                            <li class="page-item"> <a class="page-link" href="?page={{ expired_printers.paginator.num_pages }}">Ostatnia &raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="container mt-4 shadow p-4 mb-5 bg-body rounded">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="mb-4">Przepraszamy :( Musisz się zalogować, aby móc kontynuować!</h1>
+                <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

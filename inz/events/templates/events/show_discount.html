@@ -1,0 +1,28 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="shadow p-4 mb-5 bg-body rounded">  <!-- Stosujemy efekt "wysuniętej karty papieru" -->
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                {% with company_id=discount.client.id %}
+                    <a href="{% url 'list-discount' company_id=company_id %}" class="btn btn-danger mb-3">Powrót</a><hr/>
+                {% endwith %}
+            </div>
+
+            <h1>{{ discount.discount_title }}</h1>
+            <p><i>{{ discount.author.first_name }} {{ discount.author.last_name }}</i> {{ discount.publicationDate }}</p>
+            <p>{{ discount.description|safe }}</p>
+
+            {% if discount.client.manager %}
+                <a href="mailto:{{ discount.client.manager.user.email }}?subject={{ discount.client.companyName|urlencode }} | {{ discount.discount_title|urlencode }} &body=Chcę skorzystać z rabatu!" class="btn btn-primary mt-3">Skorzystaj</a>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-danger mt-4 shadow rounded" role="alert">  <!-- Dodajemy shadow i rounded do alertu -->
+                <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+                <a href="{% url 'login-user' %}" class="btn btn-primary mt-2">Zaloguj się tutaj!</a>
+            </div>
+        {% endif %}
+    </div>  <!-- Zamykamy div z efektem "wysuniętej karty papieru" -->
+</div>
+{% endblock %}

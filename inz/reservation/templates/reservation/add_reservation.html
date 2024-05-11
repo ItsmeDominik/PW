@@ -1,0 +1,81 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <a href="{% url 'list-rooms-reservation' %}" class="btn btn-danger mb-3">Powrót</a>
+                <hr/>
+            </div>
+
+            {% if form.reservation_time_restriction %}
+                <div class="alert alert-info">
+                    {{ form.reservation_time_restriction }}
+                </div>
+            {% elif timeline_data %}
+                <div class="shadow p-4 mb-5 bg-body rounded">
+                    <h1 class="mb-4">Dodaj rezerwację</h1>
+                    <table class="table table-bordered mb-4">
+                        <thead>
+                            <tr>
+                                <th>Godzina</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in timeline_data %}
+                                <tr>
+                                    <td>{{ item.hour }}</td>
+                                    <td>{{ item.reserved }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if submitted %}
+                        <div class="alert alert-success" role="alert">
+                            Twoja rezerwacja została przesłana!
+                        </div>
+                    {% else %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+
+                            <p>
+                                {{ form.start_time.label_tag }}<br>
+                                {{ form.start_time }}
+                            </p>
+                            <p>
+                                {{ form.duration.label_tag }}<br>
+                                {{ form.duration }}
+                            </p>
+                            <p>
+                                {{ form.company.label_tag }}<br>
+                                {{ form.company }}
+                            </p>
+                            <p>
+                                {{ form.discount.label_tag }}<br>
+                                {{ form.discount }}
+                            </p>
+                            <p>
+                                {{ form.room.label_tag }}<br>
+                                {{ form.room }}
+                            </p>
+                            <p>
+                                {{ form.date.label_tag }}<br>
+                                {{ form.date }}
+                            </p>
+
+
+                            <input type="submit" value="Rezerwuj" class="btn btn-secondary mt-3">
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
+                <h1>Brak wolnych terminów</h1>
+            {% endif %}
+        {% else %}
+            <h1 class="mb-4">Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+            <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj tutaj!</a>
+        {% endif %}
+    </div>
+{% endblock %}

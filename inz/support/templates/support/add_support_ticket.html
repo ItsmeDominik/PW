@@ -1,0 +1,28 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <a href="{% url 'list-tickets' %}" class="btn btn-danger">Powrót</a><hr/>
+            </div>
+            <div class="shadow p-4 mb-5 bg-body rounded">
+                <h1 class="mb-4">Dodaj zgłoszenie</h1>
+                {% if submitted %}
+                    <div class="alert alert-success" role="alert">
+                        Twoje zgłoszenie zostało dodane pomyślnie!
+                    </div>
+                {% else %}
+                    <form action="" method=POST enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Dodaj" class="btn btn-secondary mt-3">
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <h1 class="mb-4">Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+            <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj tutaj!</a>
+        {% endif %}
+    </div>
+{% endblock %}

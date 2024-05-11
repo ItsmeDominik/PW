@@ -1,0 +1,64 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container ticket-container">
+        <h1 class="text-center py-4">Moje Zgłoszenia</h1>
+        <div class="btn-group ticket-btn-group d-flex justify-content-center" role="group" aria-label="Ticket Status Filter">
+            <a href="{% url 'list-tickets' %}?status=new" class="btn btn-primary">Nowe</a>
+            <a href="{% url 'list-tickets' %}?status=inProgress" class="btn btn-warning">W Toku</a>
+            <a href="{% url 'list-tickets' %}?status=resolved" class="btn btn-success">Rozwiązane</a>
+        </div>
+
+        {% if tickets %}
+            {% for ticket in tickets %}
+                <div class="card mb-3">
+                    <a href="{% url 'show-ticket' ticket_id=ticket.id %}" class="card-header">
+                        {{ ticket.title }}
+                    </a>
+                    <div class="card-body">
+                        {% if ticket.priority == 'low' %}
+                            <p class="card-text priority-low">Priorytet: {{ ticket.get_priority_display }}</p>
+                        {% elif ticket.priority == 'medium' %}
+                            <p class="card-text priority-medium">Priorytet: {{ ticket.get_priority_display }}</p>
+                        {% elif ticket.priority == 'high' %}
+                            <p class="card-text priority-high">Priorytet: {{ ticket.get_priority_display }}</p>
+                        {% endif %}
+                        <p class="card-text">Kategoria: {{ ticket.get_category_display }}</p>
+                        <p class="card-text">Status zgłoszenia: {{ ticket.get_status_display }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Brak dostępnych zgłoszeń.
+            </div>
+        {% endif %}
+
+        <nav aria-label="Stronicowanie" class="my-3">
+            <ul class="pagination justify-content-center">
+                {% with status=request.GET.status %}
+                {% if tickets.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?status={{ status }}&page=1">Pierwsza</a></li>
+                    <li class="page-item"><a class="page-link" href="?status={{ status }}&page={{ tickets.previous_page_number }}">Poprzednia</a></li>
+                {% endif %}
+                {% if tickets.paginator.num_pages > 1 %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Strona {{ tickets.number }} z {{ tickets.paginator.num_pages }}.</a></li>
+                {% endif %}
+                {% if tickets.has_next %}
+                    <li class="page-item"><a class="page-link" href="?status={{ status }}&page={{ tickets.next_page_number }}">Następna</a></li>
+                    <li class="page-item"><a class="page-link" href="?status={{ status }}&page={{ tickets.paginator.num_pages }}">Ostatnia</a></li>
+                {% endif %}
+                {% endwith %}
+            </ul>
+        </nav>
+    </div>
+{% else %}
+    <div class="container text-center py-5">
+        <h1>Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a class="btn btn-primary" href="{% url 'login-user' %}">Zaloguj tutaj!</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

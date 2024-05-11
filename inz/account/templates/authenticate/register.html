@@ -1,0 +1,25 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    {%  if form.errors %}
+    <p>Upewnij się czy pola formularza zostały wypełnione prawidłowo ...</p>
+    {% endif %}
+    <div class="shadow p-4 mb-5 bg-body rounded">
+        <h2>Dodaj nowego użytkownika ...</h2>
+    <br/><br/>
+
+        <form action="{% url 'register-user' %}" method=POST>
+            {% csrf_token %}
+
+            {{ form.as_p }}
+        <br/>
+        <input type="submit" value="Dodaj Użytkownika" class="btn btn-secondary">
+
+        </form>
+    </div>
+
+
+{% endblock %}
+
+
+

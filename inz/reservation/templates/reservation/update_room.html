@@ -1,0 +1,28 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <a href="{% url 'list-update-room' %}" class="btn btn-danger">Powrót</a><hr/>
+            </div>
+            {% if user.is_superuser %}
+                <div class="shadow p-4 mb-5 bg-body rounded">
+                    <h2 class="mb-4">Zaktualizuj Salę</h2>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Aktualizuj" class="btn btn-secondary mt-3">
+                    </form>
+                </div>
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    Tylko superużytkownik może zaktualizować tę salę...
+                </div>
+            {% endif %}
+        {% else %}
+            <h1 class="mb-4">Przepraszam :( Musisz się zalogować, aby móc kontynuować!</h1>
+            <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj tutaj!</a>
+        {% endif %}
+    </div>
+{% endblock %}

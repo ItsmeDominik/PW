@@ -1,0 +1,45 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+            <div class="mb-3">
+                <a href="{% url 'show-company' company.id %}" class="btn btn-danger">Powrót</a>
+                <hr/>
+            </div>
+
+            <div class="shadow p-4 mb-5 bg-body rounded">
+                <h2>Osoby</h2>
+
+                {% for account in accounts %}
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ account.user.first_name }} {{ account.user.last_name }}
+                                {% if account.contact_person == 'yes' %}
+                                    <span class="badge badge-success">Osoba Kontaktowa</span>
+                                {% endif %}
+                            </h5>
+                            <p class="card-text"><strong>Firma:</strong> {{ account.company.companyName }}</p>
+                            <p class="card-text"><strong>Stanowisko:</strong> {{ account.position }}</p>
+                            <p class="card-text"><strong>Osoba Kontaktowa:</strong> {{ account.get_contact_person_display }}</p>
+                            {% if user.groups.all.0.name != "client" %}
+                                <p class="card-text"><strong>Adres e-mail:</strong> {{ account.user.email }}</p>
+                            {% endif %}
+                            {% if account.contact_person == 'yes' %}
+                                <a href="mailto:{{ account.user.email }}" class="btn btn-primary">Skontaktuj się</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info mt-3">
+                        Brak dostępnych osób na tej liście.
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h1 class="mb-4">Przepraszamy :( Musisz się zalogować, aby móc kontynuować!</h1>
+            <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+        {% endif %}
+    </div>
+{% endblock %}

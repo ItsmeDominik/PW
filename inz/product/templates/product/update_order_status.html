@@ -1,0 +1,45 @@
+{% extends 'inz/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="mb-4">Zamówienia oczekujące na realizację</h2>
+                    <div class="shadow p-4 mb-5 bg-body rounded">
+                        {% if new_orders %}
+                            {% for order in new_orders %}
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Zamówienie nr {{ order.id }} użytkownika {{ order.user.first_name }} {{ order.user.last_name }}</h5>
+                                        <p>Data zamówienia: {{ order.date_ordered }}</p>
+                                        <h6>Szczegóły:</h6>
+                                        <ul>
+                                            <li>Produkt: {{ order.product.name }}</li>
+                                            <li>Ilość: {{ order.quantity }} szt.</li>
+                                            <li>Status: {{ order.get_status_display }}</li>
+                                        </ul>
+                                        <a href="{% url 'change-order-status' order.id %}" class="btn btn-success">Oznacz jako zrealizowane</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info" role="alert">
+                                Brak zamówień oczekujących na realizację.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="mb-4">Przepraszamy :( Musisz się zalogować, aby móc kontynuować!</h1>
+                    <a href="{% url 'login-user' %}" class="btn btn-primary">Zaloguj się tutaj!</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
